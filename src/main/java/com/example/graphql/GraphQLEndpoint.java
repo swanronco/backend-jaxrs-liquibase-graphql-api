@@ -37,6 +37,7 @@ public class GraphQLEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response executeGraphQL(Map<String, Object> request) {
         String query = (String) request.get("query");
+        @SuppressWarnings("unchecked")
         Map<String, Object> variables = (Map<String, Object>) request.get("variables");
 
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()

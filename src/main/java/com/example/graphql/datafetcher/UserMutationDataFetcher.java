@@ -24,6 +24,22 @@ public class UserMutationDataFetcher implements DataFetcher<CreateUserResponse> 
         String email = (String) input.get("email");
         String username = (String) input.get("username");
         String passwordHash = BCrypt.hashpw((String) input.get("password"), BCrypt.gensalt());
-        return userService.createUser(firstName, lastName, email, username, passwordHash);
+        try {
+            return userService.createUser(firstName, lastName, email, username, passwordHash);
+        } catch (Exception e) {
+            String fullMsg = fullMessage(e).toLowerCase();
+            if (fullMsg.contains("email")) throw new RuntimeException("Cet email est déjà utilisé.");
+            if (fullMsg.contains("username")) throw new RuntimeException("Ce nom d'utilisateur est déjà pris.");
+            throw new RuntimeException("Impossible de créer le compte. Veuillez réessayer.");
+        }
+    }
+
+    private String fullMessage(Throwable t) {
+        StringBuilder sb = new StringBuilder();
+        while (t != null) {
+            if (t.getMessage() != null) sb.append(t.getMessage()).append(' ');
+            t = t.getCause();
+        }
+        return sb.toString();
     }
 }

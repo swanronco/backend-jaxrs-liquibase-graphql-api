@@ -28,4 +28,10 @@
             </column>
     </createTable>
     </changeSet>
+
+    <changeSet id="2" author="Swan RONCO">
+        <addUniqueConstraint tableName="users" columnNames="email" constraintName="uq_users_email"/>
+        <addUniqueConstraint tableName="users" columnNames="username" constraintName="uq_users_username"/>
+    </changeSet>
+
 </databaseChangeLog>

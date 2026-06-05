@@ -19,12 +19,16 @@ public class JwtUtil {
     static {
         Properties props = new Properties();
         try (InputStream input = JwtUtil.class.getClassLoader().getResourceAsStream("application-local.properties")) {
-            props.load(input);
+            if (input != null) props.load(input);
         } catch (IOException e) {
             throw new RuntimeException("Could not load application-local.properties", e);
         }
-        SECRET = props.getProperty("jwt.secret");
-        EXPIRATION = Long.parseLong(props.getProperty("jwt.expiration"));
+        String secret = System.getenv("JWT_SECRET");
+        if (secret == null) secret = props.getProperty("jwt.secret", "REDACTED");
+        String expiration = System.getenv("JWT_EXPIRATION");
+        if (expiration == null) expiration = props.getProperty("jwt.expiration", "86400000");
+        SECRET = secret;
+        EXPIRATION = Long.parseLong(expiration);
         KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 

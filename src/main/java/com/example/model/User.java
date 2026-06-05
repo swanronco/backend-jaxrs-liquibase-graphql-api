@@ -17,7 +17,10 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(unique=true, nullable=false)
     private String email;
+
+    @Column(unique=true, nullable=false)
     private String username;
 
     @Column(name = "password_hash")

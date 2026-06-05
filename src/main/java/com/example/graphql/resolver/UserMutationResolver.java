@@ -37,9 +37,9 @@ public class UserMutationResolver {
         try {
             long expiration = JwtUtil.getExpiration(token);
             blacklistedTokens.put(token, expiration);
-            return new LogoutResponse(true, "Logout successful");
+            return new LogoutResponse(true, "Déconnexion réussie");
         } catch (Exception e) {
-            return new LogoutResponse(false, "Logout failed: " + e.getMessage());
+            return new LogoutResponse(false, "Échec de la déconnexion : " + e.getMessage());
         }
     }
 
