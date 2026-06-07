@@ -8,9 +8,25 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE: ghcr.io/swanronco/jaxrs-liquibase-graphql-api
+  IMAGE: ghcr.io/swanronco/backend-jaxrs-liquibase-graphql-api
 
 jobs:
+  validate-k8s:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Validate dev overlay
+        run: kustomize build k8s/overlays/dev
+
+      - name: Validate prod overlay
+        run: kustomize build k8s/overlays/prod
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +42,7 @@ jobs:
         run: ./gradlew test
 
   build-and-push:
-    needs: test
+    needs: [test, validate-k8s]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     permissions:
@@ -61,14 +77,14 @@ jobs:
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:${{ github.sha }}
 
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    environment: production
-
-    steps:
-      - name: Deploy to Kubernetes
-        run: kubectl rollout restart deployment/backend
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+  # deploy:
+  #   needs: build-and-push
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   environment: production
+  #
+  #   steps:
+  #     - name: Deploy to Kubernetes
+  #       run: kubectl rollout restart deployment/backend
+  #       env:
+  #         KUBECONFIG: ${{ secrets.KUBECONFIG }}
