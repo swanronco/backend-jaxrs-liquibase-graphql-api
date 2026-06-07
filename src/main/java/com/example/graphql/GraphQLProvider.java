@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Map;
 import java.util.Objects;
 
 public class GraphQLProvider {
