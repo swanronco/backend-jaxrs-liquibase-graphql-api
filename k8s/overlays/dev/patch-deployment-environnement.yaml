@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-jaxrs-liquibase-graphql-api
+spec:
+  template:
+    spec:
+      containers:
+        - name: backend-jaxrs-liquibase-graphql-api
+          env:
+            - name: ENVIRONMENT
+              value: "development"

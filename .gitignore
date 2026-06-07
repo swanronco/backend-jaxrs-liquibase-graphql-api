@@ -6,4 +6,5 @@ build/
 *.iws
 *.ipr
 out/
+bin/
 application-local.properties
