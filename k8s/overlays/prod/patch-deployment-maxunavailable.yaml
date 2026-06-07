@@ -1,0 +1,8 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-jaxrs-liquibase-graphql-api
+spec:
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0

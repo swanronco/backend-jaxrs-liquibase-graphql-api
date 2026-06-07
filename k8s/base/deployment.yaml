@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-jaxrs-liquibase-graphql-api
+  namespace: backend
+  labels:
+    app: backend-jaxrs-liquibase-graphql-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-jaxrs-liquibase-graphql-api
+  template:
+    metadata:
+      labels:
+        app: backend-jaxrs-liquibase-graphql-api
+    spec:
+      serviceAccountName: backend-jaxrs-liquibase-graphql-api
+      containers:
+        - name: backend-jaxrs-liquibase-graphql-api
+          image: ghcr.io/swanronco/backend-jaxrs-liquibase-graphql-api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              value: "production"
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_URL
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: JWT_SECRET
