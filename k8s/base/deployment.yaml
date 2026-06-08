@@ -44,3 +44,21 @@ spec:
                 secretKeyRef:
                   name: app-secret
                   key: JWT_SECRET
+          # Sondes : un pod n'est "Ready" (et ne reçoit du trafic) qu'une fois le port
+          # 8080 ouvert -> rend `kubectl rollout status` fiable comme garde-fou.
+          # tcpSocket plutôt que httpGet : le servlet GraphQL ne répond qu'en POST
+          # (un GET renverrait 405). Idéalement, exposer un vrai endpoint /health côté app.
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
