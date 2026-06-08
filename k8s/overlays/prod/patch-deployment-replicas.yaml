@@ -2,5 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-jaxrs-liquibase-graphql-api
+  namespace: backend
 spec:
   replicas: 3
