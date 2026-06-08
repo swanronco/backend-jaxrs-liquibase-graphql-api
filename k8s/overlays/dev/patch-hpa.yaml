@@ -1,0 +1,10 @@
+# Overlay dev : HPA réduit. Pas de metrics-server en local + nœud kind unique,
+# donc on abaisse le plancher pour que ça tienne et respecte le replicas: 1 du dev.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-jaxrs-liquibase-graphql-api
+  namespace: backend
+spec:
+  minReplicas: 1
+  maxReplicas: 2
