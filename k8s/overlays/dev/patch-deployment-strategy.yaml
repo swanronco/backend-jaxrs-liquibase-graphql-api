@@ -1,0 +1,15 @@
+# Overlay dev : déploiement "un pod à la fois" (pas de surge).
+# Sur un nœud kind unique au quota serré, on évite d'avoir 2 pods backend simultanés
+# pendant un rolling update (l'ancien + le nouveau ne tiennent pas ensemble).
+# Contrepartie : brève indisponibilité au déploiement — acceptable en dev.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-jaxrs-liquibase-graphql-api
+  namespace: backend
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
